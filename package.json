@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "Small library to show an easy loading screen",
   "main": "src/index.js",
-  "scripts": {
-
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/danilor/easy_loading.git"
+    "url": "git+https://github.com/danilor/easy_loading.git",
+    "tswatch": "npx tsc -w",
+    "ts": "npx tsc"
   },
   "keywords": [
     "easy",
@@ -21,5 +21,8 @@
   "bugs": {
     "url": "https://github.com/danilor/easy_loading/issues"
   },
-  "homepage": "https://github.com/danilor/easy_loading#readme"
+  "homepage": "https://github.com/danilor/easy_loading#readme",
+  "devDependencies": {
+    "typescript": "^5.6.3"
+  }
 }

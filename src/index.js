@@ -1,342 +1,88 @@
-/**
- * Easy Loading class
- * @class EasyLoading
- * @param {Object} config - Configuration object
- * @param {String} config.text - Text to display
- * @param {String} config.id - Id of the loading element
- * @param {String} config.extraClass - Extra class to add to the loading element
- * @param {String} config.loadingType - Type of loading element
- * @param {String} config.styleId - Id of the style element
- */
-
-class EasyLoading {
-
-    /*
-        * Default configuration
-     */
-    _config = {
-        text: 'Loading',
-        id: '_easy-loading',
-        textId: '_easy-loading-text',
-        extraClass: '_easyLoadingCustomClass',
-        loadingType: 'facebook',
-        styleId: '_easy-loading-style'
-    };
-
-    _generalStyles = `
-._easy-loading {
-        width: 100vw;
-        height: 100vh;
-        justify-content: center;
-        align-items: center;
-        overflow: hidden;
-        flex-direction: column;
-        background-color: rgba(0, 0, 0, 0.7);
-        position: fixed;
-        z-index: 9999;
-        top: 0;
-        left: 0;
-        display: none;
-}
-._easy-loading.active {
-    display: flex;
-}
-
-._easy-loading p {
-    font-family: Arial, sans-serif;
-    color: white;
-}
-    `;
-
-    /**
-     * Generic loading options
-     * */
-    _loadingOptions = {
-        facebook: {
-            style: `
-.lds-facebook {
-  /* change color here */
-  color: white
-}
-.lds-facebook,
-.lds-facebook div {
-  box-sizing: border-box;
-}
-.lds-facebook {
-  display: inline-block;
-  position: relative;
-  width: 80px;
-  height: 80px;
-}
-.lds-facebook div {
-  display: inline-block;
-  position: absolute;
-  left: 8px;
-  width: 16px;
-  background: currentColor;
-  animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
-}
-.lds-facebook div:nth-child(1) {
-  left: 8px;
-  animation-delay: -0.24s;
-}
-.lds-facebook div:nth-child(2) {
-  left: 32px;
-  animation-delay: -0.12s;
-}
-.lds-facebook div:nth-child(3) {
-  left: 56px;
-  animation-delay: 0s;
-}
-@keyframes lds-facebook {
-  0% {
-    top: 8px;
-    height: 64px;
-  }
-  50%, 100% {
-    top: 24px;
-    height: 32px;
-  }
-}
-            `,
-            html: `<div class="lds-facebook"><div></div><div></div><div></div></div>`
-        },
-        heart: {
-            style: `
-.lds-heart {
-  color: white
-}
-.lds-heart,
-.lds-heart div,
-.lds-heart div:after,
-.lds-heart div:before {
-  box-sizing: border-box;
-}
-.lds-heart {
-  display: inline-block;
-  position: relative;
-  width: 80px;
-  height: 80px;
-  transform: rotate(45deg);
-  transform-origin: 40px 40px;
-}
-.lds-heart div {
-  top: 28px;
-  left: 28px;
-  position: absolute;
-  width: 32px;
-  height: 32px;
-  background: currentColor;
-  animation: lds-heart 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);
-}
-.lds-heart div:after,
-.lds-heart div:before {
-  content: " ";
-  position: absolute;
-  display: block;
-  width: 32px;
-  height: 32px;
-  background: currentColor;
-}
-.lds-heart div:before {
-  left: -24px;
-  border-radius: 50% 0 0 50%;
-}
-.lds-heart div:after {
-  top: -24px;
-  border-radius: 50% 50% 0 0;
-}
-@keyframes lds-heart {
-  0% {
-    transform: scale(0.95);
-  }
-  5% {
-    transform: scale(1.1);
-  }
-  39% {
-    transform: scale(0.85);
-  }
-  45% {
-    transform: scale(1);
-  }
-  60% {
-    transform: scale(0.95);
-  }
-  100% {
-    transform: scale(0.9);
-  }
-}`,
-            html: `<div class="lds-heart"><div></div></div>`
-        },
-        spinner: {
-            style: `
-.lds-spinner {
-  /* change color here */
-  color: white
-}
-.lds-spinner,
-.lds-spinner div,
-.lds-spinner div:after {
-  box-sizing: border-box;
-}
-.lds-spinner {
-  display: inline-block;
-  position: relative;
-  width: 80px;
-  height: 80px;
-}
-.lds-spinner div {
-  transform-origin: 40px 40px;
-  animation: lds-spinner 1.2s linear infinite;
-}
-.lds-spinner div:after {
-  content: " ";
-  display: block;
-  position: absolute;
-  top: 3.2px;
-  left: 36.8px;
-  width: 6.4px;
-  height: 17.6px;
-  border-radius: 20%;
-  background: currentColor;
-}
-.lds-spinner div:nth-child(1) {
-  transform: rotate(0deg);
-  animation-delay: -1.1s;
-}
-.lds-spinner div:nth-child(2) {
-  transform: rotate(30deg);
-  animation-delay: -1s;
-}
-.lds-spinner div:nth-child(3) {
-  transform: rotate(60deg);
-  animation-delay: -0.9s;
-}
-.lds-spinner div:nth-child(4) {
-  transform: rotate(90deg);
-  animation-delay: -0.8s;
-}
-.lds-spinner div:nth-child(5) {
-  transform: rotate(120deg);
-  animation-delay: -0.7s;
-}
-.lds-spinner div:nth-child(6) {
-  transform: rotate(150deg);
-  animation-delay: -0.6s;
-}
-.lds-spinner div:nth-child(7) {
-  transform: rotate(180deg);
-  animation-delay: -0.5s;
-}
-.lds-spinner div:nth-child(8) {
-  transform: rotate(210deg);
-  animation-delay: -0.4s;
-}
-.lds-spinner div:nth-child(9) {
-  transform: rotate(240deg);
-  animation-delay: -0.3s;
-}
-.lds-spinner div:nth-child(10) {
-  transform: rotate(270deg);
-  animation-delay: -0.2s;
-}
-.lds-spinner div:nth-child(11) {
-  transform: rotate(300deg);
-  animation-delay: -0.1s;
-}
-.lds-spinner div:nth-child(12) {
-  transform: rotate(330deg);
-  animation-delay: 0s;
-}
-@keyframes lds-spinner {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}`,
-            html: `<div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>`
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
         }
+        return t;
     };
-
-
-    /**
-     * Constructor
-     * @param config
-     */
-    constructor(config = {}) {
-        this._config = {...this._config, ...config};
+    return __assign.apply(this, arguments);
+};
+var EasyLoading = (function () {
+    function EasyLoading(config) {
+        if (config === void 0) { config = null; }
+        this._config = {
+            text: 'Loading',
+            id: '_easy-loading',
+            textId: '_easy-loading-text',
+            extraClass: '_easyLoadingCustomClass',
+            loadingType: 'facebook',
+            styleId: '_easy-loading-style'
+        };
+        this._generalStyles = "\n._easy-loading {\n        width: 100vw;\n        height: 100vh;\n        justify-content: center;\n        align-items: center;\n        overflow: hidden;\n        flex-direction: column;\n        background-color: rgba(0, 0, 0, 0.7);\n        position: fixed;\n        z-index: 9999;\n        top: 0;\n        left: 0;\n        display: none;\n}\n._easy-loading.active {\n    display: flex;\n}\n\n._easy-loading p {\n    font-family: Arial, sans-serif;\n    color: white;\n}\n    ";
+        this._loadingOptions = {
+            facebook: {
+                style: "\n.lds-facebook {\n  /* change color here */\n  color: white\n}\n.lds-facebook,\n.lds-facebook div {\n  box-sizing: border-box;\n}\n.lds-facebook {\n  display: inline-block;\n  position: relative;\n  width: 80px;\n  height: 80px;\n}\n.lds-facebook div {\n  display: inline-block;\n  position: absolute;\n  left: 8px;\n  width: 16px;\n  background: currentColor;\n  animation: lds-facebook 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;\n}\n.lds-facebook div:nth-child(1) {\n  left: 8px;\n  animation-delay: -0.24s;\n}\n.lds-facebook div:nth-child(2) {\n  left: 32px;\n  animation-delay: -0.12s;\n}\n.lds-facebook div:nth-child(3) {\n  left: 56px;\n  animation-delay: 0s;\n}\n@keyframes lds-facebook {\n  0% {\n    top: 8px;\n    height: 64px;\n  }\n  50%, 100% {\n    top: 24px;\n    height: 32px;\n  }\n}\n            ",
+                html: "<div class=\"lds-facebook\"><div></div><div></div><div></div></div>"
+            },
+            heart: {
+                style: "\n.lds-heart {\n  color: white\n}\n.lds-heart,\n.lds-heart div,\n.lds-heart div:after,\n.lds-heart div:before {\n  box-sizing: border-box;\n}\n.lds-heart {\n  display: inline-block;\n  position: relative;\n  width: 80px;\n  height: 80px;\n  transform: rotate(45deg);\n  transform-origin: 40px 40px;\n}\n.lds-heart div {\n  top: 28px;\n  left: 28px;\n  position: absolute;\n  width: 32px;\n  height: 32px;\n  background: currentColor;\n  animation: lds-heart 1.2s infinite cubic-bezier(0.215, 0.61, 0.355, 1);\n}\n.lds-heart div:after,\n.lds-heart div:before {\n  content: \" \";\n  position: absolute;\n  display: block;\n  width: 32px;\n  height: 32px;\n  background: currentColor;\n}\n.lds-heart div:before {\n  left: -24px;\n  border-radius: 50% 0 0 50%;\n}\n.lds-heart div:after {\n  top: -24px;\n  border-radius: 50% 50% 0 0;\n}\n@keyframes lds-heart {\n  0% {\n    transform: scale(0.95);\n  }\n  5% {\n    transform: scale(1.1);\n  }\n  39% {\n    transform: scale(0.85);\n  }\n  45% {\n    transform: scale(1);\n  }\n  60% {\n    transform: scale(0.95);\n  }\n  100% {\n    transform: scale(0.9);\n  }\n}",
+                html: "<div class=\"lds-heart\"><div></div></div>"
+            },
+            spinner: {
+                style: "\n.lds-spinner {\n  /* change color here */\n  color: white\n}\n.lds-spinner,\n.lds-spinner div,\n.lds-spinner div:after {\n  box-sizing: border-box;\n}\n.lds-spinner {\n  display: inline-block;\n  position: relative;\n  width: 80px;\n  height: 80px;\n}\n.lds-spinner div {\n  transform-origin: 40px 40px;\n  animation: lds-spinner 1.2s linear infinite;\n}\n.lds-spinner div:after {\n  content: \" \";\n  display: block;\n  position: absolute;\n  top: 3.2px;\n  left: 36.8px;\n  width: 6.4px;\n  height: 17.6px;\n  border-radius: 20%;\n  background: currentColor;\n}\n.lds-spinner div:nth-child(1) {\n  transform: rotate(0deg);\n  animation-delay: -1.1s;\n}\n.lds-spinner div:nth-child(2) {\n  transform: rotate(30deg);\n  animation-delay: -1s;\n}\n.lds-spinner div:nth-child(3) {\n  transform: rotate(60deg);\n  animation-delay: -0.9s;\n}\n.lds-spinner div:nth-child(4) {\n  transform: rotate(90deg);\n  animation-delay: -0.8s;\n}\n.lds-spinner div:nth-child(5) {\n  transform: rotate(120deg);\n  animation-delay: -0.7s;\n}\n.lds-spinner div:nth-child(6) {\n  transform: rotate(150deg);\n  animation-delay: -0.6s;\n}\n.lds-spinner div:nth-child(7) {\n  transform: rotate(180deg);\n  animation-delay: -0.5s;\n}\n.lds-spinner div:nth-child(8) {\n  transform: rotate(210deg);\n  animation-delay: -0.4s;\n}\n.lds-spinner div:nth-child(9) {\n  transform: rotate(240deg);\n  animation-delay: -0.3s;\n}\n.lds-spinner div:nth-child(10) {\n  transform: rotate(270deg);\n  animation-delay: -0.2s;\n}\n.lds-spinner div:nth-child(11) {\n  transform: rotate(300deg);\n  animation-delay: -0.1s;\n}\n.lds-spinner div:nth-child(12) {\n  transform: rotate(330deg);\n  animation-delay: 0s;\n}\n@keyframes lds-spinner {\n  0% {\n    opacity: 1;\n  }\n  100% {\n    opacity: 0;\n  }\n}",
+                html: "<div class=\"lds-spinner\"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>"
+            }
+        };
+        if (config === null || config === undefined) {
+            this._config = __assign(__assign({}, this._config), config);
+        }
         this.createElement();
     }
-
-    /**
-     * Sets the configuration
-     * @param config
-     */
-    setConfig(config) {
-        this._config = {...this._config, ...config};
+    EasyLoading.prototype.setConfig = function (config) {
+        this._config = __assign(__assign({}, this._config), config);
         this.deletesElement();
         this.createElement();
-    }
-
-
-    /**
-     * Deletes the loading element
-     */
-    deletesElement() {
-        const el = document.getElementById(this._config.id);
+    };
+    EasyLoading.prototype.deletesElement = function () {
+        var el = document.getElementById(this._config.id);
         if (el !== null) {
             el.remove();
         }
-        const style = document.getElementById(this._config.styleId);
+        var style = document.getElementById(this._config.styleId);
         if (style !== null) {
             style.remove();
         }
-    }
-
-
-    /**
-     * Creates the loading element
-     */
-    createElement() {
-        const el = document.getElementById(this._config.id);
+    };
+    EasyLoading.prototype.createElement = function () {
+        var el = document.getElementById(this._config.id);
         if (el === null) {
-
-            const div = document.createElement('div');
+            var div = document.createElement('div');
             div.id = this._config.id;
             div.classList.add('_easy-loading');
             div.classList.add(this._config.extraClass);
-            div.innerHTML = this._loadingOptions[this._config.loadingType].html + `<p id="${this._config.textId}">${this._config.text}</p>`;
+            div.innerHTML = this._loadingOptions[this._config.loadingType].html + "<p id=\"".concat(this._config.textId, "\">").concat(this._config.text, "</p>");
             document.body.insertAdjacentHTML("afterend", div.outerHTML);
-            document.body.insertAdjacentHTML("afterend", `<style id="${this._config.styleId}">${this._generalStyles} ${this._loadingOptions[this._config.loadingType].style}</style>`);
+            document.body.insertAdjacentHTML("afterend", "<style id=\"".concat(this._config.styleId, "\">").concat(this._generalStyles, " ").concat(this._loadingOptions[this._config.loadingType].style, "</style>"));
         }
-    }
-
-    /**
-     * Shows the loading element
-     */
-    show(text = null) {
+    };
+    EasyLoading.prototype.show = function (text) {
+        if (text === void 0) { text = null; }
         if (text !== null) {
             document.getElementById(this._config.textId).innerText = text;
         }
-        const el = document.getElementById(this._config.id);
+        var el = document.getElementById(this._config.id);
         if (el !== null) {
-            el.classList.add('active')
+            el.classList.add('active');
         }
-    }
-
-    /**
-     * Hides the loading element
-     */
-    hide() {
-        const el = document.getElementById(this._config.id);
+    };
+    EasyLoading.prototype.hide = function () {
+        var el = document.getElementById(this._config.id);
         if (el !== null) {
-            el.classList.remove('active')
+            el.classList.remove('active');
         }
-    }
-}
-
-if (exports !== undefined) {
-    exports.EasyLoadingObject = EasyLoading();
-}
+    };
+    return EasyLoading;
+}());
+//# sourceMappingURL=index.js.map
