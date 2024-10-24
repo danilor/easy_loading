@@ -85,4 +85,11 @@ var EasyLoading = (function () {
     };
     return EasyLoading;
 }());
+try {
+    if (module !== undefined && module !== null) {
+        module.exports = new EasyLoading();
+    }
+}
+catch (e) {
+}
 //# sourceMappingURL=index.js.map

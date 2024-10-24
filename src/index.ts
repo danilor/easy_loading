@@ -354,3 +354,15 @@ class EasyLoading {
         }
     }
 }
+
+try{
+// @ts-ignore
+    if(module !== undefined && module !== null){
+        // @ts-ignore
+        module.exports = new EasyLoading();
+
+    }
+}catch (e){
+
+}
+
