@@ -1,0 +1,25 @@
+{
+  "name": "easy_loading",
+  "version": "1.0.0",
+  "description": "Small library to show an easy loading screen",
+  "main": "src/index.js",
+  "scripts": {
+
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/danilor/easy_loading.git"
+  },
+  "keywords": [
+    "easy",
+    "loading",
+    "js",
+    "javascript"
+  ],
+  "author": "Danilo Ramirez Mattey",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/danilor/easy_loading/issues"
+  },
+  "homepage": "https://github.com/danilor/easy_loading#readme"
+}
