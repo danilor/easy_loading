@@ -101,7 +101,7 @@ class EasyLoading {
             `,
             html: `<div class="lds-facebook"><div></div><div></div><div></div></div>`
         },
-        heart:{
+        heart: {
             style: `
 .lds-heart {
   color: white
@@ -168,7 +168,7 @@ class EasyLoading {
 }`,
             html: `<div class="lds-heart"><div></div></div>`
         },
-        spinner:{
+        spinner: {
             style: `
 .lds-spinner {
   /* change color here */
@@ -329,13 +329,14 @@ class EasyLoading {
     /**
      * Hides the loading element
      */
-    hide(){
+    hide() {
         const el = document.getElementById(this._config.id);
         if (el !== null) {
             el.classList.remove('active')
         }
     }
-
 }
 
-
+if (exports !== undefined) {
+    exports.EasyLoadingObject = EasyLoading();
+}
